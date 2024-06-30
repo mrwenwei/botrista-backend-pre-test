@@ -1,0 +1,19 @@
+# Python cache files
+__pycache__/
+*.pyc
+
+# SQLite database file
+*.db
+
+# Docker files and volumes
+db_data/
+
+# Flask specific
+instance/
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+.DS_Store
