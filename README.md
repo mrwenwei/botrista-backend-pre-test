@@ -1,7 +1,7 @@
 # botrista-backend-pre-test
 Create an API service using Python with sqlite and Flask.
 
-API document has been written in swagger.
+API document was written in swagger.
 
 ## Table of Contents
 
@@ -40,6 +40,9 @@ API document has been written in swagger.
 3. Open the document url http://127.0.0.1:8080/apidocs
 
 ## DB diagram
+DB queries are utilized by ORM package `SQLAlchemy`
+
+<img width="600" alt="截圖 2024-06-30 下午5 00 56" src="https://github.com/mrwenwei/botrista-backend-pre-test/assets/11289450/335e2539-9498-4c54-a09e-e85a1e413a8d">
 
 
 ## API Documentation
@@ -48,29 +51,43 @@ Written in http://127.0.0.1:8080/apidocs
 
 ## API Usage
 
-All the apis can be called on swagger.
+All the APIs can be called on swagger.
 
 1. Create account
-    ```
-    /POST signup
-    ```
-    Create customer (permission=0) or manager (permission=1) by using this endpoint.
-
-2. Login
-    ```
-    /POST login
-    ```
-    Login with the username and password. After successfully login, API will return login token (user_id) in response and service will cache the user for 600 seconds. After 600s user needs to login again.
-
-3. Manager create product
     ```HTTP
-    /POST product
+    POST /signup
 
     Body:
     {
-        "name": "Iphone 16",
-        "price": 999.99,
-        "stock": 10
+      "password": "string",
+      "permission": 0 or 1,
+      "username": "string"
+    }
+    ```
+    Create customer (permission=0) or manager (permission=1) by using this endpoint.
+
+2. Login and Logout
+    ```HTTP
+    POST /login
+    ```
+    Login with the username and password. After successfully login, API will return login token (To simplify the mechanism here I use `user_id`) in response and service will cache the user for 600 seconds. After 600s the user needs to login again.
+
+   ```HTTP
+   POST /logout
+
+   Authentication:
+   token
+   ```
+
+4. Manager create product
+    ```HTTP
+    POST /product
+
+    Body:
+    {
+        "name": "string",
+        "price": float,
+        "stock": integer
     }
 
     Authentication:
@@ -80,18 +97,18 @@ All the apis can be called on swagger.
 
     After successfully created product, it will return the `product_id` in response.
 
-4. Manager update/delete product
+5. Manager update/delete product
     ```HTTP
-    /PUT product
+    PUT /product
 
     Parameter:
     product_id
 
     Body (optional, you can edit any of it):
     {
-        "name": "Iphone 16",
-        "price": 999.99,
-        "stock": 10
+        "name": "string",
+        "price": float,
+        "stock": integer
     }
 
     Authentication:
@@ -99,7 +116,7 @@ All the apis can be called on swagger.
     ```
 
     ```HTTP
-    /DELETE product
+    DELETE /product
 
     Parameter:
     product_id
@@ -109,7 +126,7 @@ All the apis can be called on swagger.
     ```
     The product can not be deleted if there exists any order of the product.
 
-5. Get product info (logged in required)
+6. Get product info (logged in required)
     Get specific product
     ```HTTP
     GET /product
@@ -132,7 +149,7 @@ All the apis can be called on swagger.
     stock_upper_bound
     ```
 
-6. Customer create order
+7. Customer create order
 
     ```HTTP
     POST /order
@@ -140,8 +157,8 @@ All the apis can be called on swagger.
     Body:
     [
         {
-            "product_id": 1,
-            "quantity": 3
+            "product_id": integer,
+            "quantity": positive integer
         }
     ]
 
@@ -150,7 +167,7 @@ All the apis can be called on swagger.
     ```
     Multiple products can be assigned. If the product exists and the stock is enough, then the order will be created sucessfully. 
 
-7. Get order list
+8. Get order list
     If you are a customer, you will get your orders only.
     If you are a manager, you could get all orders that created by customers.
     ```HTTP
