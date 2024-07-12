@@ -1,4 +1,4 @@
-# botrista-backend-pre-test
+# flask-backend-sample
 Create an API service using Python with sqlite and Flask.
 
 API document was written in swagger.
